@@ -1,0 +1,41 @@
+name: Build & Deploy
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2 # Wont be needed when actions are public
+
+      - name: Build Source
+        id: build-source
+        uses: ./.github/actions/build
+        with:
+          path: "source"
+          use: "last"
+
+      - name: Build Target
+        id: build-target
+        uses: ./.github/actions/build
+        with:
+          path: "target"
+
+      - name: Deploy
+        uses: ./.github/actions/deploy
+        with:
+          source: "source"
+          target: "target"
+          target-sha: "${{ steps.build-target.outputs.commit-sha }}"
+          env-type: 'sftp'
+          env-host: ${{ secrets.ENV_HOST }}
+          env-port: ${{ secrets.ENV_PORT }}
+          env-user: ${{ secrets.ENV_USER }}
+          env-pass: ${{ secrets.ENV_PASS }}
+          env-remote-root: ${{ secrets.ENV_REMOTE_ROOT }}
