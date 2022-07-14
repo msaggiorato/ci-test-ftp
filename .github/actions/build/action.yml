@@ -29,7 +29,7 @@ runs:
       shell: bash
       run: |
         if [ "${{ inputs.use }}" == "last" ]; then
-          if [ -z "$PERSISTENT_LAST_REF" ]; then
+          if [ -n "$PERSISTENT_LAST_REF" ]; then
             echo "::set-output name=ref::$PERSISTENT_LAST_REF"
           else
             echo "::set-output name=ref::false"
