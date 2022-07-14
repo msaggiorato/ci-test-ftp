@@ -29,7 +29,7 @@ jobs:
         uses: ./.github/actions/build
         with:
           path: "source"
-          use: "last"
+          use: "0147387d405ddd694aae747de37879b096f45aac"
   build-target:
     name: Build Target
     runs-on: ubuntu-latest
