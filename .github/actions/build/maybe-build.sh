@@ -16,7 +16,7 @@ rmFind() {
 	rm -rf "${DIR_TO_REMOVE}"
 	done
 }
-rmFind "$BUILD_DIR" ".git"
-rmFind "$BUILD_DIR" ".github"
-rmFind "$BUILD_DIR" "node_modules"
+rmFind "${GITHUB_WORKSPACE}/$BUILD_DIR" ".git"
+rmFind "${GITHUB_WORKSPACE}/$BUILD_DIR" ".github"
+rmFind "${GITHUB_WORKSPACE}/$BUILD_DIR" "node_modules"
 rm -rf "${GITHUB_WORKSPACE}/$BUILD_DIR/vendor"
