@@ -91,6 +91,7 @@ runs:
       shell: bash
       run: |
         cd "${{ inputs.path }}";
+        ls -al
         if [ -f "${{ inputs.path }}/.github/build-for-deployment.sh" ]; then
           echo "Running code specific build script"
           bash "${{ inputs.path }}/.github/build-for-deployment.sh"
