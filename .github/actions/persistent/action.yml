@@ -12,7 +12,7 @@ runs:
       uses: actions/cache@v3
       with:
         path: "deployment-info"
-        key: deployment-info
+        key: deployment-info-${{ hashFiles('deployment-info/**') }}
 
     - name: Read Info
       id: read-info
