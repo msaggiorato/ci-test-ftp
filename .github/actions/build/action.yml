@@ -96,3 +96,17 @@ runs:
           echo "Running default build script"
           build-for-deployment.sh
         fi
+
+    - name: Cleanup
+      shell: bash
+      run: |
+        rmFind() {
+          find "${1}" -type d -name "${2}" | while read DIR_TO_REMOVE; do
+            echo "Removing ${DIR_TO_REMOVE}"
+            rm -rf "${DIR_TO_REMOVE}"
+          done
+        }
+        rmFind "${{ inputs.path }}" ".git"
+        rmFind "${{ inputs.path }}" ".github"
+        rmFind "${{ inputs.path }}" "node_modules"
+        rm -rf "${GITHUB_WORKSPACE}/${{ inputs.path }}/vendor"
