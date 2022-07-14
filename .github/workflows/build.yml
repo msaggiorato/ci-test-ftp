@@ -1,0 +1,45 @@
+name: Build & Deploy
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+
+jobs:
+  build-source:
+    name: Build Source
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2 # Wont be needed when actions are public
+
+      - name: Build
+        uses: ./.github/actions/build
+        with:
+          path: "$GITHUB_WORKSPACE/source"
+          use: "last"
+  build-target:
+    name: Build Target
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2 # Wont be needed when actions are public
+
+      - name: Build
+        uses: ./.github/actions/build
+        with:
+          path: "$GITHUB_WORKSPACE/target"
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: [build-source, build-target]
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2 # Wont be needed when actions are public
+
+      - name: Deploy
+        uses: ./.github/actions/deploy
+        with:
+          source: "$GITHUB_WORKSPACE/source"
+          target: "$GITHUB_WORKSPACE/target"
