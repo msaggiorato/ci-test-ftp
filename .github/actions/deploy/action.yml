@@ -70,7 +70,7 @@ runs:
     - name: Compare
       id: compare
       shell: bash
-      run: build-sftp.sh "${{ inputs.source }}" "${{ inputs.target }}" "deploy.manifest";
+      run: compose-manifest.sh "${{ inputs.source }}" "${{ inputs.target }}" "deploy.manifest";
 
     - uses: actions/setup-node@v3
       if: ${{ steps.compare.outputs.is-empty != 'true' }}
