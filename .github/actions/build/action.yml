@@ -83,7 +83,9 @@ runs:
 
     - name: Create Path
       shell: bash
-      run: mkdir -p "${{ inputs.path }}"
+      run: |
+        mkdir -p "${{ inputs.path }}"
+        touch "${{ inputs.path }}/.gitkeep"
 
     - name: Maybe Build Source
       shell: bash
