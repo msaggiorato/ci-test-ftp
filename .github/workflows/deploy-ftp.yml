@@ -11,11 +11,15 @@ jobs:
     name: Build Source
     runs-on: ubuntu-latest
     outputs:
-      cache-key: ${{ steps.build.outputs.cache-key }}
       commit-sha: ${{ steps.build.outputs.commit-sha }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2 # Wont be needed when actions are public
+
+      - name: SharedFS
+        uses: ./.github/actions/sharefs
+        with:
+          path: "source"
 
       - name: Build
         id: build
@@ -27,11 +31,15 @@ jobs:
     name: Build Target
     runs-on: ubuntu-latest
     outputs:
-      cache-key: ${{ steps.build.outputs.cache-key }}
       commit-sha: ${{ steps.build.outputs.commit-sha }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2 # Wont be needed when actions are public
+
+      - name: SharedFS
+        uses: ./.github/actions/sharefs
+        with:
+          path: "target"
 
       - name: Build
         id: build
@@ -46,13 +54,21 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2 # Wont be needed when actions are public
 
+      - name: SharedFS
+        uses: ./.github/actions/sharefs
+        with:
+          path: "source"
+
+      - name: SharedFS
+        uses: ./.github/actions/sharefs
+        with:
+          path: "target"
+
       - name: Deploy
         uses: ./.github/actions/deploy
         with:
           source: "source"
-          source-key: "${{needs.build-source.outputs.cache-key}}"
           target: "target"
-          target-key: "${{needs.build-target.outputs.cache-key}}"
           target-sha: "${{needs.build-target.outputs.commit-sha}}"
           env-type: 'sftp'
           env-host: ${{ secrets.ENV_HOST }}

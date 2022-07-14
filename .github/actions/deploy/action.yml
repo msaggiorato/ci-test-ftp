@@ -5,18 +5,10 @@ inputs:
     description: "Source folder (already built)"
     required: false
     default: 'source'
-  source-key:
-    description: "Source cache key to restore from"
-    required: false
-    default: 'false'
   target:
     description: "Target folder (already built)"
     required: false
     default: 'target'
-  target-key:
-    description: "Target cache key to restore from"
-    required: false
-    default: 'false'
   target-sha:
     description: "SHA to set deployment info to in case of success"
     required: true
@@ -54,20 +46,6 @@ runs:
     - name: Path Setup
       shell: bash
       run: echo "${{ github.action_path }}" >> $GITHUB_PATH
-
-    - name: Cache Target
-      if: ${{ inputs.source-key != 'false' }}
-      uses: actions/cache@v3
-      with:
-        path: "${{ inputs.source }}"
-        key: ${{ inputs.source-key }}
-
-    - name: Cache Target
-      if: ${{ inputs.target-key != 'false' }}
-      uses: actions/cache@v3
-      with:
-        path: "${{ inputs.target }}"
-        key: ${{ inputs.target-key }}
 
     - name: Make sure paths exist
       shell: bash
