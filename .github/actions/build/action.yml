@@ -104,28 +104,8 @@ runs:
           echo "::set-output name=sha::false"
         fi
 
-    - name: Maybe Build Source
+    - name: Maybe Build And Cleanup
       shell: bash
-      run: |
-        cd "${{ inputs.path }}";
-        if [ -f "${{ inputs.path }}/.github/build-for-deployment.sh" ]; then
-          echo "Running code specific build script"
-          bash "${{ inputs.path }}/.github/build-for-deployment.sh"
-        else
-          echo "Running default build script"
-          build-for-deployment.sh
-        fi
-
-    - name: Cleanup
-      shell: bash
-      run: |
-        rmFind() {
-          find "${1}" -type d -name "${2}" | while read DIR_TO_REMOVE; do
-            echo "Removing ${DIR_TO_REMOVE}"
-            rm -rf "${DIR_TO_REMOVE}"
-          done
-        }
-        rmFind "${{ inputs.path }}" ".git"
-        rmFind "${{ inputs.path }}" ".github"
-        rmFind "${{ inputs.path }}" "node_modules"
-        rm -rf "${GITHUB_WORKSPACE}/${{ inputs.path }}/vendor"
+      env:
+        BUILD_DIR: ${{ inputs.path }}
+      run: maybe-build.sh
