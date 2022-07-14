@@ -1,0 +1,20 @@
+name: "Persistent FS"
+description: ""
+runs:
+  using: "composite"
+  steps:
+    - name: Path Setup
+      shell: bash
+      run: echo "${{ github.action_path }}" >> $GITHUB_PATH
+
+    - name: Deployment Info
+      id: deployment-info
+      uses: actions/cache@v3
+      with:
+        path: "deployment-info"
+        key: deployment-info
+
+    - name: Read Info
+      id: read-info
+      shell: bash
+      run: read-persistent.sh
