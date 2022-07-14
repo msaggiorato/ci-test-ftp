@@ -24,18 +24,22 @@ runs:
       run: echo "${{ github.action_path }}" >> $GITHUB_PATH
 
     - name: Read Info
-      if: ${{ inputs.use == 'last' }}
+      if: ${{ inputs.use != 'current' }}
       id: read-info
       shell: bash
       run: |
-        if [ -z "$PERSISTENT_LAST_REF" ]; then
-          echo "::set-output name=ref::$PERSISTENT_LAST_REF"
+        if [ "${{ inputs.use }}" == "last" ]; then
+          if [ -z "$PERSISTENT_LAST_REF" ]; then
+            echo "::set-output name=ref::$PERSISTENT_LAST_REF"
+          else
+            echo "::set-output name=ref::false"
+          fi
         else
-          echo "::set-output name=ref::false"
+          echo "::set-output name=ref::${{ inputs.use }}"
         fi
 
     - name: Checkout Specific Commit
-      if: ${{ inputs.use == 'last' && steps.read-info.outputs.ref != 'false' }}
+      if: ${{ steps.read-info.outputs.ref != 'false' }}
       uses: actions/checkout@v2
       continue-on-error: true
       with:
