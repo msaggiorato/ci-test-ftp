@@ -44,10 +44,6 @@ runs:
         path: "${{ inputs.path }}"
         key: ${{ steps.cache-key.outputs.key }}
 
-    - name: Create Path
-      shell: bash
-      run: mkdir -p "${{ inputs.path }}"
-
     - name: Deployment Info
       if: ${{ inputs.use == 'last' }}
       id: deployment-info
@@ -84,6 +80,10 @@ runs:
       with:
         submodules: "recursive"
         path: ${{ inputs.path }}
+
+    - name: Create Path
+      shell: bash
+      run: mkdir -p "${{ inputs.path }}"
 
     - name: Maybe Build Source
       shell: bash
