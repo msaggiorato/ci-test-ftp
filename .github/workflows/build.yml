@@ -10,11 +10,14 @@ jobs:
   build-source:
     name: Build Source
     runs-on: ubuntu-latest
+    outputs:
+      cache-key: ${{ steps.build.outputs.cache-key }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2 # Wont be needed when actions are public
 
       - name: Build
+        id: build
         uses: ./.github/actions/build
         with:
           path: "$GITHUB_WORKSPACE/source"
@@ -22,11 +25,14 @@ jobs:
   build-target:
     name: Build Target
     runs-on: ubuntu-latest
+    outputs:
+      cache-key: ${{ steps.build.outputs.cache-key }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2 # Wont be needed when actions are public
 
       - name: Build
+        id: build
         uses: ./.github/actions/build
         with:
           path: "$GITHUB_WORKSPACE/target"
@@ -42,4 +48,6 @@ jobs:
         uses: ./.github/actions/deploy
         with:
           source: "$GITHUB_WORKSPACE/source"
+          source-key: "${{needs.build-source.outputs.cache-key}}"
           target: "$GITHUB_WORKSPACE/target"
+          target-key: "${{needs.build-target.outputs.cache-key}}"

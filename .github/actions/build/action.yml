@@ -12,6 +12,10 @@ inputs:
     description: "GH Token to use for checkouts"
     required: false
     default: "${{ github.token }}"
+outputs:
+  cache-key:
+    description: "Key used for the build path"
+    value: ${{ steps.cache-key.outputs.key }}
 runs:
   using: "composite"
   steps:

@@ -4,9 +4,17 @@ inputs:
   source:
     description: "Source folder (already built)"
     required: true
+  source-key:
+    description: "Source cache key to restore from"
+    required: false
+    default: 'false'
   target:
     description: "Target folder (already built)"
     required: true
+  target-key:
+    description: "Target cache key to restore from"
+    required: false
+    default: 'false'
 runs:
   using: "composite"
   steps:
@@ -14,26 +22,19 @@ runs:
       shell: bash
       run: echo "${{ github.action_path }}" >> $GITHUB_PATH
 
-    - name: Cache Key
-      id: cache-key
-      shell: bash
-      run: |
-        cache_hash() {
-          local PREFIX;
-          PREFIX=${2};
-          if [ -n "${PREFIX}" ]; then
-            PREFIX="${PREFIX}-"
-          fi
-          echo -n "${1}" | md5sum | awk -v prefix="${PREFIX}" '{print prefix$1}'
-        }
-        KEY=$(cache_hash "${{ inputs.path }}" "${{ github.run_number }}")
-        echo "::set-output name=key::${KEY}"; # set up cache action with this key on the path
-
-    - name: Cache
+    - name: Cache Target
+      if: inputs.source-key != 'false'
       uses: actions/cache@v3
       with:
-        path: "${{ inputs.path }}"
-        key: ${{ steps.cache-key.outputs.key }}
+        path: "${{ inputs.source }}"
+        key: ${{ inputs.source-key }}
+
+    - name: Cache Target
+      if: inputs.target-key != 'false'
+      uses: actions/cache@v3
+      with:
+        path: "${{ inputs.target }}"
+        key: ${{ inputs.target-key }}
 
     - name: Source
       shell: bash
