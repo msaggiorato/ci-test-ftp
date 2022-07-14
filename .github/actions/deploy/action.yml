@@ -38,8 +38,8 @@ runs:
 
     - name: Source
       shell: bash
-      run: echo "${{ inputs.source }}";
+      run: ls -al "${{ inputs.source }}";
 
     - name: Target
       shell: bash
-      run: echo "${{ inputs.target }}";
+      run: ls -al "${{ inputs.target }}";
