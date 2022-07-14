@@ -14,6 +14,9 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2 # Wont be needed when actions are public
 
+      - name: Persistent Env
+        uses: ./.github/actions/persistent # Needed for "last" support on build
+
       - name: Build Source
         id: build-source
         uses: ./.github/actions/build
@@ -32,10 +35,15 @@ jobs:
         with:
           source: "source"
           target: "target"
-          target-sha: "${{ steps.build-target.outputs.commit-sha }}"
           env-type: 'sftp'
           env-host: ${{ secrets.ENV_HOST }}
           env-port: ${{ secrets.ENV_PORT }}
           env-user: ${{ secrets.ENV_USER }}
           env-pass: ${{ secrets.ENV_PASS }}
           env-remote-root: ${{ secrets.ENV_REMOTE_ROOT }}
+
+      - name: Persistent Env
+        uses: ./.github/actions/persistent # Needed for "last" support on build
+
+      - name: Persistent Env
+        run: set-persistent.sh "last_ref" "${{ steps.build-target.outputs.commit-sha }}"
