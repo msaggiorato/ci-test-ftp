@@ -23,14 +23,14 @@ runs:
       run: echo "${{ github.action_path }}" >> $GITHUB_PATH
 
     - name: Cache Target
-      if: inputs.source-key != 'false'
+      if: ${{ inputs.source-key != 'false' }}
       uses: actions/cache@v3
       with:
         path: "${{ inputs.source }}"
         key: ${{ inputs.source-key }}
 
     - name: Cache Target
-      if: inputs.target-key != 'false'
+      if: ${{ inputs.target-key != 'false' }}
       uses: actions/cache@v3
       with:
         path: "${{ inputs.target }}"
