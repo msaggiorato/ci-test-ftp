@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       cache-key: ${{ steps.build.outputs.cache-key }}
+      commit-sha: ${{ steps.build.outputs.commit-sha }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2 # Wont be needed when actions are public
@@ -27,6 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       cache-key: ${{ steps.build.outputs.cache-key }}
+      commit-sha: ${{ steps.build.outputs.commit-sha }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2 # Wont be needed when actions are public

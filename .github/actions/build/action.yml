@@ -16,6 +16,9 @@ outputs:
   cache-key:
     description: "Key used for the build path"
     value: ${{ steps.cache-key.outputs.key }}
+  commit-sha:
+    description: "Key used for the build path"
+    value: ${{ steps.current-sha.outputs.sha }}
 runs:
   using: "composite"
   steps:
@@ -84,6 +87,29 @@ runs:
     - name: Create Path
       shell: bash
       run: mkdir -p "${{ inputs.path }}"
+
+    - name: Set SHA Output
+      env: 
+        USE: ${{ inputs.use }}
+        READ_INFO_REF: ${{ steps.read-info.outputs.ref }}
+      id: current-sha
+      shell: bash
+      run: |
+        if [ "${USE}" == "last" ]; then
+          if [ "${READ_INFO_REF}" != "false" ]; then
+            if [ -d "$GITHUB_WORKSPACE/${{ inputs.path }}/.git" ]; then
+              echo "::set-output name=sha::${READ_INFO_REF}"
+            else
+              echo "::set-output name=sha::false"
+            fi
+          else
+            echo "::set-output name=sha::false"
+          fi
+        elif [ "${USE}" == "current" ]; then
+          echo "::set-output name=sha::${GITHUB_SHA}"
+        else
+          echo "::set-output name=sha::false"
+        fi
 
     - name: Maybe Build Source
       shell: bash
