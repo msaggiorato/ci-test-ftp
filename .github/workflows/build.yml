@@ -51,3 +51,9 @@ jobs:
           source-key: "${{needs.build-source.outputs.cache-key}}"
           target: "target"
           target-key: "${{needs.build-target.outputs.cache-key}}"
+          env-type: 'sftp'
+          env-host: ${{ secrets.ENV_HOST }}
+          env-port: ${{ secrets.ENV_PORT }}
+          env-user: ${{ secrets.ENV_USER }}
+          env-pass: ${{ secrets.ENV_PASS }}
+          env-remote-root: ${{ secrets.ENV_REMOTE_ROOT }}
