@@ -53,6 +53,7 @@ jobs:
           source-key: "${{needs.build-source.outputs.cache-key}}"
           target: "target"
           target-key: "${{needs.build-target.outputs.cache-key}}"
+          target-sha: "${{needs.build-target.outputs.commit-sha}}"
           env-type: 'sftp'
           env-host: ${{ secrets.ENV_HOST }}
           env-port: ${{ secrets.ENV_PORT }}
