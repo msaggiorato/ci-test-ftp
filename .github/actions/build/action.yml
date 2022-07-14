@@ -38,21 +38,13 @@ runs:
         path: "${{ inputs.path }}"
         key: ${{ inputs.cache-key }}
 
-    - name: Deployment Info
-      if: ${{ inputs.use == 'last' }}
-      id: deployment-info
-      uses: actions/cache@v3
-      with:
-        path: "deployment-info"
-        key: deployment-info
-
     - name: Read Info
       if: ${{ inputs.use == 'last' }}
       id: read-info
       shell: bash
       run: |
-        if [ -f "$GITHUB_WORKSPACE/deployment-info/ref" ]; then
-          echo "::set-output name=ref::$(cat deployment-info/ref)"
+        if [ -z "$PERSISTENT_LAST_REF" ]; then
+          echo "::set-output name=ref::$PERSISTENT_LAST_REF"
         else
           echo "::set-output name=ref::false"
         fi
