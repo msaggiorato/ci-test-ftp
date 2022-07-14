@@ -69,6 +69,12 @@ runs:
         path: "${{ inputs.target }}"
         key: ${{ inputs.target-key }}
 
+    - name: Make sure paths exist
+      shell: bash
+      run: |
+        mkdir -p "${GITHUB_WORKSPACE}/${{ inputs.source }}"
+        mkdir -p "${GITHUB_WORKSPACE}/${{ inputs.target }}"
+
     - name: Compare
       id: compare
       shell: bash
