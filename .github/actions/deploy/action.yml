@@ -68,14 +68,17 @@ runs:
         key: ${{ inputs.target-key }}
 
     - name: Compare
+      id: compare
       shell: bash
       run: build-sftp.sh "${{ inputs.source }}" "${{ inputs.target }}" "deploy.manifest";
 
     - uses: actions/setup-node@v3
+      if: ${{ steps.compare.outputs.is-empty != 'true' }}
       with:
         node-version: 16
 
     - name: Deploy
+      if: ${{ steps.compare.outputs.is-empty != 'true' }}
       shell: bash
       run: |
         npm i -g saucal/ftp-deployment
