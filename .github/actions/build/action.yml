@@ -4,6 +4,14 @@ inputs:
   path:
     description: "Path"
     required: true
+  cache:
+    description: "Do cache?"
+    required: false
+    default: "false"
+  cache-key:
+    description: "cache-key"
+    required: false
+    default: "false"
   use:
     description: "Commit to build"
     required: false
@@ -13,9 +21,6 @@ inputs:
     required: false
     default: "${{ github.token }}"
 outputs:
-  cache-key:
-    description: "Key used for the build path"
-    value: ${{ steps.cache-key.outputs.key }}
   commit-sha:
     description: "Key used for the build path"
     value: ${{ steps.current-sha.outputs.sha }}
@@ -26,26 +31,12 @@ runs:
       shell: bash
       run: echo "${{ github.action_path }}" >> $GITHUB_PATH
 
-    - name: Cache Key
-      id: cache-key
-      shell: bash
-      run: |
-        cache_hash() {
-          local PREFIX;
-          PREFIX=${2};
-          if [ -n "${PREFIX}" ]; then
-            PREFIX="${PREFIX}-"
-          fi
-          echo -n "${1}" | md5sum | awk -v prefix="${PREFIX}" '{print prefix$1}'
-        }
-        KEY=$(cache_hash "${{ inputs.path }}" "${{ github.run_number }}")
-        echo "::set-output name=key::${KEY}"; # set up cache action with this key on the path
-
     - name: Cache
+      if: ${{ inputs.cache != 'false' && inputs.cache-key != 'false' }}
       uses: actions/cache@v3
       with:
         path: "${{ inputs.path }}"
-        key: ${{ steps.cache-key.outputs.key }}
+        key: ${{ inputs.cache-key }}
 
     - name: Deployment Info
       if: ${{ inputs.use == 'last' }}
