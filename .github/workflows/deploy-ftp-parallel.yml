@@ -82,5 +82,5 @@ jobs:
       - name: Persistent Env
         uses: ./.github/actions/persistent # Needed for "last" support on build
 
-      - name: Persistent Env
+      - name: Set last_ref on the persistent env
         run: set-persistent.sh "last_ref" "${{needs.build-target.outputs.commit-sha}}"
