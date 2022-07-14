@@ -3,14 +3,16 @@ description: ""
 inputs:
   source:
     description: "Source folder (already built)"
-    required: true
+    required: false
+    default: 'source'
   source-key:
     description: "Source cache key to restore from"
     required: false
     default: 'false'
   target:
     description: "Target folder (already built)"
-    required: true
+    required: false
+    default: 'target'
   target-key:
     description: "Target cache key to restore from"
     required: false
