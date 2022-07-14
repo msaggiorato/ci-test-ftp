@@ -36,10 +36,6 @@ runs:
         path: "${{ inputs.target }}"
         key: ${{ inputs.target-key }}
 
-    - name: Source
+    - name: Compare
       shell: bash
-      run: ls -al "${{ inputs.source }}";
-
-    - name: Target
-      shell: bash
-      run: ls -al "${{ inputs.target }}";
+      run: build-sftp.sh "${{ inputs.source }}" "${{ inputs.target }}" "deploy.manifest";
