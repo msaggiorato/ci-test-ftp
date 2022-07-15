@@ -16,9 +16,6 @@ jobs:
 
       - run: cd ./.github/actions/persistent && npm ci  # Wont be needed when actions are public
       - uses: ./.github/actions/persistent # Needed for "last" support on build
-        name: Persistent Env
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Source
         id: build-source

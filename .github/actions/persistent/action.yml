@@ -3,7 +3,8 @@ description: 'Greet someone and record the time'
 inputs:
   token:  # id of input
     description: 'GH Token'
-    required: true
+    required: false
+    default: "${{ github.token }}"
   branch:  # id of input
     description: 'Branch to use as permanent fs'
     required: false
