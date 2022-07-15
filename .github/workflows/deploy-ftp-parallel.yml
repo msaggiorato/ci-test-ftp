@@ -16,20 +16,29 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2 # Wont be needed when actions are public
 
-      - name: Persistent Env
-        uses: ./.github/actions/persistent # Needed for "last" support on build
+      - run: cd ./.github/actions/persistent && npm ci # Wont be needed when actions are public
 
       - name: SharedFS
         uses: ./.github/actions/sharefs
         with:
           path: "source"
 
+      - uses: ./.github/actions/persistent
+        id: get-ref
+        with:
+          get: last_ref
+
+      - name: Checkout Source
+        uses: ./.github/actions/checkout-extended
+        with:
+          path: "source"
+          use: "${{ steps.get-ref.outputs.value }}"
+
       - name: Build
         id: build
         uses: ./.github/actions/build
         with:
           path: "source"
-          use: "last"
   build-target:
     name: Build Target
     runs-on: ubuntu-latest
@@ -41,6 +50,11 @@ jobs:
 
       - name: SharedFS
         uses: ./.github/actions/sharefs
+        with:
+          path: "target"
+
+      - name: Checkout Source
+        uses: ./.github/actions/checkout-extended
         with:
           path: "target"
 
@@ -57,6 +71,8 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2 # Wont be needed when actions are public
 
+      - run: cd ./.github/actions/persistent && npm ci # Wont be needed when actions are public
+
       - name: SharedFS
         uses: ./.github/actions/sharefs
         with:
@@ -70,8 +86,6 @@ jobs:
       - name: Deploy
         uses: ./.github/actions/deploy-ftp
         with:
-          source: "source"
-          target: "target"
           env-type: 'sftp'
           env-host: ${{ secrets.ENV_HOST }}
           env-port: ${{ secrets.ENV_PORT }}
@@ -79,8 +93,8 @@ jobs:
           env-pass: ${{ secrets.ENV_PASS }}
           env-remote-root: ${{ secrets.ENV_REMOTE_ROOT }}
 
-      - name: Persistent Env
-        uses: ./.github/actions/persistent # Needed for "last" support on build
-
       - name: Set last_ref on the persistent env
-        run: set-persistent.sh "last_ref" "${{needs.build-target.outputs.commit-sha}}"
+        uses: ./.github/actions/persistent
+        with:
+          set: last_ref
+          value: ${{ github.sha }}
