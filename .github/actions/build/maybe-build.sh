@@ -1,6 +1,7 @@
 #!/bin/bash -e
 # Build
-cd "$BUILD_DIR";
+mkdir -p "${GITHUB_WORKSPACE}/${BUILD_DIR}"
+cd "${GITHUB_WORKSPACE}/${BUILD_DIR}";
 if [ -f "$BUILD_DIR/.github/build-for-deployment.sh" ]; then
 	echo "Running code specific build script"
 	bash "$BUILD_DIR/.github/build-for-deployment.sh"

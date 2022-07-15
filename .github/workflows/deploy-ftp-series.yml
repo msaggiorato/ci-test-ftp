@@ -14,18 +14,30 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2 # Wont be needed when actions are public
 
-      - run: cd ./.github/actions/persistent && npm ci  # Wont be needed when actions are public
-      - uses: ./.github/actions/persistent # Needed for "last" support on build
+      - run: cd ./.github/actions/persistent && npm ci # Wont be needed when actions are public
+
+      - uses: ./.github/actions/persistent
+        id: get-ref
+        with:
+          get: last_ref
+
+      - name: Checkout Source
+        uses: ./.github/actions/checkout-extended
+        with:
+          path: "source"
+          use: "${{ steps.get-ref.outputs.value }}"
 
       - name: Build Source
-        id: build-source
         uses: ./.github/actions/build
         with:
           path: "source"
-          use: "last"
+
+      - name: Checkout Target
+        uses: ./.github/actions/checkout-extended
+        with:
+          path: "target"
 
       - name: Build Target
-        id: build-target
         uses: ./.github/actions/build
         with:
           path: "target"
@@ -35,7 +47,7 @@ jobs:
         with:
           source: "source"
           target: "target"
-          env-type: 'sftp'
+          env-type: "sftp"
           env-host: ${{ secrets.ENV_HOST }}
           env-port: ${{ secrets.ENV_PORT }}
           env-user: ${{ secrets.ENV_USER }}
@@ -43,4 +55,7 @@ jobs:
           env-remote-root: ${{ secrets.ENV_REMOTE_ROOT }}
 
       - name: Set last_ref on the persistent env
-        run: set-persistent.sh "last_ref" "${{ steps.build-target.outputs.commit-sha }}"
+        uses: ./.github/actions/persistent
+        with:
+          set: last_ref
+          value: ${{ github.sha }}

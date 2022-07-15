@@ -1,0 +1,55 @@
+name: "Checkout Extended"
+description: ""
+inputs:
+  path:
+    description: "Path"
+    required: true
+  use:
+    description: "Commit to build"
+    required: false
+    default: "current"
+  gh_token:
+    description: "GH Token to use for checkouts"
+    required: false
+    default: "${{ github.token }}"
+outputs:
+  sha:
+    description: "Real SHA of the commit checked out"
+    value: ${{ steps.current-sha.outputs.sha }}
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout Specific Commit
+      id: checkout-specific
+      if: ${{ inputs.use != 'current' && inputs.use != '' && inputs.use != 'false' }}
+      uses: actions/checkout@v2
+      continue-on-error: true
+      with:
+        submodules: "recursive"
+        ref: ${{ inputs.use }}
+        token: ${{ inputs.gh_token }}
+        path: ${{ inputs.path }}
+
+    - name: Checkout Current Commit
+      id: checkout-current
+      if: ${{ inputs.use == 'current' }}
+      uses: actions/checkout@v2
+      continue-on-error: true
+      with:
+        submodules: "recursive"
+        path: ${{ inputs.path }}
+
+    - name: Set SHA Output
+      env: 
+        IS_SPECIFIC: ${{ steps.checkout-specific.outcome == 'success' }}
+        IS_CURRENT: ${{ steps.checkout-current.outcome == 'success' }}
+      id: current-sha
+      shell: bash
+      run: |
+        if [ "${IS_SPECIFIC}" == "true" ] || [ "${IS_CURRENT}" == "true" ]; then
+          cd "${{ inputs.path }}"
+          SHA=$(git log -n 1 --format=%H);
+          echo "::set-output name=sha::${SHA}"
+        else
+          echo "::set-output name=sha::false"
+        fi
