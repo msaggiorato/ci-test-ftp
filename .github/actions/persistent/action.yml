@@ -1,20 +1,17 @@
-name: "Persistent FS"
-description: ""
+name: 'Hello World'
+description: 'Greet someone and record the time'
+inputs:
+  token:  # id of input
+    description: 'GH Token'
+    required: true
+  branch:  # id of input
+    description: 'Branch to use as permanent fs'
+    required: false
+    default: 'persistent-fs'
+outputs:
+  time: # id of output
+    description: 'The time we greeted you'
 runs:
-  using: "composite"
-  steps:
-    - name: Path Setup
-      shell: bash
-      run: echo "${{ github.action_path }}" >> $GITHUB_PATH
-
-    - name: Deployment Info
-      id: deployment-info
-      uses: actions/cache@v3
-      with:
-        path: "deployment-info"
-        key: deployment-info-${{ hashFiles('deployment-info/**') }}
-
-    - name: Read Info
-      id: read-info
-      shell: bash
-      run: read-persistent.sh
+  using: 'node16'
+  main: 'main.js'
+  post: 'post.js'

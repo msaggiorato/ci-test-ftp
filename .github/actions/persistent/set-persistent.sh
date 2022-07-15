@@ -1,7 +1,7 @@
 #!/bin/bash -e
+PERSISTENT_PATH="$GITHUB_WORKSPACE/${PERSISTENTFS_INPUT_BRANCH}"
 VAR="$(echo "$1" | awk '{print toupper($0)}')"
 VAL="$(echo "$2" | head -1)" # Only support one line
-PERSISTENT_PATH="$GITHUB_WORKSPACE/deployment-info"
 mkdir -p "${PERSISTENT_PATH}"
 FILE="$(echo "$VAR" | awk '{print tolower($0)}')"
 echo "${VAL}" > "${PERSISTENT_PATH}/${FILE}"
