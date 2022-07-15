@@ -6,7 +6,7 @@ mkdir -p "${PERSISTENT_PATH}"
 FILE="$(echo "$VAR" | awk '{print tolower($0)}')"
 echo "${VAL}" > "${PERSISTENT_PATH}/${FILE}"
 
-ENV_VAR="PERSISTENT_${VAR}"
+export ENV_VAR="PERSISTENT_${VAR}"
 
 sed -i "/^$ENV_VAR=/d" "$GITHUB_ENV"
 echo "$ENV_VAR=$VAL" >> "$GITHUB_ENV"
