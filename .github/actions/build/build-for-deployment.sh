@@ -2,7 +2,9 @@
 if [ -f 'composer.json' ]; then
 	echo "--------------------------------------------------"
 	echo "Setup authentication for out Satispress instance"
-	# composer config http-basic.packages.saucal.com ${satis_key} satispress
+	if [ -n "${INPUT_SATIS_KEY}" ]; then
+		composer config http-basic.packages.saucal.com "${INPUT_SATIS_KEY}" satispress
+	fi
 
 	# As we are on the deploy branch, plugins should exist. Run composer install to update dependencies as needed.
 	echo "--------------------------------------------------"
