@@ -34,7 +34,7 @@ jobs:
           path: "target"
 
       - name: Deploy
-        uses: ./.github/actions/deploy
+        uses: ./.github/actions/deploy-ftp
         with:
           source: "source"
           target: "target"

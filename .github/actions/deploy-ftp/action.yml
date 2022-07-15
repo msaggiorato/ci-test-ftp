@@ -1,4 +1,4 @@
-name: "Compare and Deploy"
+name: "FTP Deploy"
 description: ""
 inputs:
   source:
