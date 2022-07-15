@@ -1,4 +1,9 @@
 #!/bin/bash
+if [ -n "$PERSISTENTFS_CLOSED" ]; then
+	echo "Already pushed"
+	exit 0
+fi
+echo "PERSISTENTFS_CLOSED=1" >> "$GITHUB_ENV"
 DEPLOY_BRANCH="${INPUT_BRANCH}"
 COMMIT_AUTHOR_NAME="github-actions"
 COMMIT_AUTHOR_EMAIL="github-actions@github.com"

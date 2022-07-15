@@ -9,6 +9,22 @@ inputs:
     description: 'Branch to use as permanent fs'
     required: false
     default: 'persistent-fs'
+  get:
+    description: 'Key to get'
+    required: false
+    default: ''
+  default:
+    description: 'Default returned if key being get does not exist'
+    required: false
+    default: ''
+  set:
+    description: 'Key to set'
+    required: false
+    default: ''
+  value:
+    description: 'Value to set'
+    required: false
+    default: ''
 outputs:
   time: # id of output
     description: 'The time we greeted you'
