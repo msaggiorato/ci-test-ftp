@@ -4,6 +4,9 @@ TARGET_DIR="${2:-target}"
 TMP_FILE="$(mktemp)"
 DETAILS_FILE="${3:-${TMP_FILE}}"
 
+mkdir -p "${GITHUB_WORKSPACE}/${SOURCE_DIR}"
+mkdir -p "${GITHUB_WORKSPACE}/${TARGET_DIR}"
+
 rm -f "${DETAILS_FILE}"
 touch "${DETAILS_FILE}"
 
